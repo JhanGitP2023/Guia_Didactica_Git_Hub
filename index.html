@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Guía interactiva para aprender Git, GitHub, Git Bash, ramas, pull requests, Issues y GitHub Pages.">
+  <title>Git y GitHub | Guía práctica colaborativa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        },
+        colors: { ink: '#07111f', panel: '#0d1b2d', line: '#20344f', git: '#f97316', violet: '#a78bfa', cyan: '#38bdf8' },
+        boxShadow: { glow: '0 0 35px rgba(59,130,246,.14)' }
+      }}
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body { background:#07111f; }
+    .grid-bg { background-image:linear-gradient(rgba(56,189,248,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.045) 1px,transparent 1px);background-size:36px 36px; }
+    .code-block { position:relative; overflow-x:auto; }
+    .code-block pre { white-space:pre; }
+    .copy-btn { position:absolute;right:.65rem;top:.65rem; }
+    .nav-link.active { color:#fb923c; }
+    .section-kicker { letter-spacing:.16em; }
+    .faq-content[hidden] { display:none; }
+    .step-number { box-shadow:0 0 0 6px rgba(249,115,22,.10); }
+    ::selection { background:#7c3aed;color:white; }
+  </style>
+</head>
+<body class="font-sans text-slate-100 antialiased">
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-ink/90 backdrop-blur-xl">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8" aria-label="Navegación principal">
+      <a href="#inicio" class="flex items-center gap-3 font-extrabold tracking-tight">
+        <!-- Logotipo de Git -->
+        <span class="grid h-10 w-10 place-items-center" aria-hidden="true">
+          <svg class="h-10 w-10" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#F05032" d="M30.6 14.1 17.9 1.4a2.7 2.7 0 0 0-3.8 0L11.5 4l3.3 3.3a3.2 3.2 0 0 1 4.1 4.1l3.2 3.2a3.2 3.2 0 1 1-1.9 1.9L17 13.4v8.4a3.2 3.2 0 1 1-2.7-.1v-8.5a3.2 3.2 0 0 1-1.7-4.1L9.3 5.8 1.4 13.7a2.7 2.7 0 0 0 0 3.8l12.7 12.7a2.7 2.7 0 0 0 3.8 0l12.7-12.7a2.4 2.4 0 0 0 0-3.4Z"/>
+            <circle cx="16" cy="9.2" r="1.25" fill="#fff"/>
+            <circle cx="22.2" cy="15.5" r="1.25" fill="#fff"/>
+            <circle cx="15.7" cy="23" r="1.25" fill="#fff"/>
+          </svg>
+        </span>
+
+        <span>Git <span class="text-orange-400">y</span> GitHub<span class="hidden text-slate-400 sm:inline"> / Guía práctica</span></span>
+      </a>
+      <button id="menuBtn" class="rounded-lg border border-white/15 px-3 py-2 text-sm md:hidden" aria-expanded="false" aria-controls="mobileMenu">Menú ☰</button>
+      <div class="hidden items-center gap-6 text-sm text-slate-300 md:flex">
+        <a class="nav-link hover:text-white" href="#fundamentos">Fundamentos</a>
+        <a class="nav-link hover:text-white" href="#comandos">Comandos</a>
+        <a class="nav-link hover:text-white" href="#ramas">Ramas</a>
+        <a class="nav-link hover:text-white" href="#colaboracion">Colaboración</a>
+        <a class="rounded-lg bg-orange-500 px-4 py-2 font-bold text-slate-950 transition hover:bg-orange-400" href="#ruta">Empezar guía</a>
+      </div>
+    </nav>
+    <div id="mobileMenu" class="hidden border-t border-white/10 px-4 pb-4 md:hidden">
+      <div class="grid gap-3 pt-3 text-sm text-slate-300">
+        <a href="#fundamentos">Fundamentos</a><a href="#comandos">Comandos</a><a href="#ramas">Ramas</a><a href="#colaboracion">Colaboración</a><a href="#issues">Issues</a><a href="#publicacion">Publicación</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="inicio" class="grid-bg relative overflow-hidden border-b border-white/10">
+      <div class="pointer-events-none absolute -left-28 top-8 h-72 w-72 rounded-full bg-blue-600/15 blur-3xl"></div>
+      <div class="pointer-events-none absolute -right-20 top-20 h-72 w-72 rounded-full bg-violet-600/15 blur-3xl"></div>
+      <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[1fr_.9fr] lg:px-8">
+        <div>
+          <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-3 py-1.5 text-xs font-semibold text-orange-300">
+            <span class="h-2 w-2 rounded-full bg-orange-400"></span> APRENDE · PRACTICA · COLABORA
+          </div>
+          <h1 class="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">Construye mejores proyectos con <span class="text-orange-400">Git</span> y <span class="text-violet-300">GitHub</span>.</h1>
+          <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300">Una guía práctica para crear repositorios, trabajar desde Git Bash y Visual Studio Code, organizar ramas, revisar código y publicar tus proyectos en equipo.</p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href="#ruta" class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 font-bold text-slate-950 transition hover:-translate-y-0.5 hover:bg-orange-400">Explorar el paso a paso <span class="ml-2">→</span></a>
+            <a href="#comandos" class="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold transition hover:bg-white/10">Ver comandos</a>
+          </div>
+          <div class="mt-9 grid max-w-lg grid-cols-3 gap-3">
+            <div class="rounded-xl border border-white/10 bg-slate-950/50 p-3"><div class="text-2xl font-extrabold text-orange-400">01</div><div class="mt-1 text-xs text-slate-400">Control de versiones</div></div>
+            <div class="rounded-xl border border-white/10 bg-slate-950/50 p-3"><div class="text-2xl font-extrabold text-violet-300">02</div><div class="mt-1 text-xs text-slate-400">Trabajo colaborativo</div></div>
+            <div class="rounded-xl border border-white/10 bg-slate-950/50 p-3"><div class="text-2xl font-extrabold text-cyan-300">03</div><div class="mt-1 text-xs text-slate-400">Publicación web</div></div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="absolute -inset-4 rounded-3xl bg-gradient-to-br from-blue-500/15 via-violet-500/10 to-orange-500/10 blur-xl"></div>
+          <div class="relative overflow-hidden rounded-2xl border border-white/15 bg-slate-950 shadow-glow">
+            <div class="flex items-center gap-2 border-b border-white/10 px-4 py-3"><span class="h-2.5 w-2.5 rounded-full bg-red-400"></span><span class="h-2.5 w-2.5 rounded-full bg-yellow-300"></span><span class="h-2.5 w-2.5 rounded-full bg-green-400"></span><span class="ml-2 text-xs text-slate-500">terminal — proyecto-equipo</span></div>
+            <div class="space-y-3 p-5 font-mono text-xs sm:text-sm">
+              <p><span class="text-green-400">usuario@equipo</span><span class="text-slate-500"> MINGW64 </span><span class="text-cyan-300">~/proyecto</span></p>
+              <p><span class="text-orange-400">$</span> git switch -c feature/registro</p>
+              <p class="text-slate-500">Switched to a new branch 'feature/registro'</p>
+              <p><span class="text-orange-400">$</span> git add .</p>
+              <p><span class="text-orange-400">$</span> git commit -m "Agrega formulario"</p>
+              <p class="text-green-300">[feature/registro a12bc34] Agrega formulario</p>
+              <p><span class="text-orange-400">$</span> git push -u origin feature/registro</p>
+              <div class="mt-4 rounded-lg border border-violet-400/25 bg-violet-400/10 p-3 text-violet-200">✓ Rama lista para abrir un Pull Request</div>
+            </div>
+          </div>
+          <div class="absolute -bottom-5 -left-4 rounded-xl border border-white/10 bg-panel px-4 py-3 shadow-xl sm:-left-8"><span class="text-xs text-slate-400">Flujo recomendado</span><div class="mt-1 flex items-center gap-2 text-sm font-bold"><span class="text-orange-400">main</span><span class="text-slate-600">→</span><span class="text-violet-300">develop</span><span class="text-slate-600">→</span><span class="text-cyan-300">feature</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fundamentos" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="max-w-3xl"><p class="section-kicker text-xs font-bold uppercase text-orange-400">01 · Conceptos esenciales</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Primero, entiende las herramientas</h2><p class="mt-4 leading-7 text-slate-400">Git registra la evolución del código; GitHub aloja repositorios remotos y facilita que un equipo revise, comparta y gestione cambios.</p></div>
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        <article class="rounded-2xl border border-white/10 bg-panel p-6"><div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-orange-400/15 text-2xl text-orange-300">⑂</div><h3 class="text-xl font-bold">Git</h3><p class="mt-2 leading-6 text-slate-400">Sistema de control de versiones distribuido. Guarda el historial de cambios mediante commits y permite trabajar con ramas.</p></article>
+        <article class="rounded-2xl border border-white/10 bg-panel p-6"><div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-white/10 text-2xl">●</div><h3 class="text-xl font-bold">GitHub</h3><p class="mt-2 leading-6 text-slate-400">Plataforma para alojar repositorios remotos, invitar colaboradores, revisar pull requests, gestionar Issues y publicar sitios estáticos.</p></article>
+        <article class="rounded-2xl border border-white/10 bg-panel p-6"><div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-cyan-400/15 text-2xl text-cyan-300">⌘</div><h3 class="text-xl font-bold">Git Bash + VS Code</h3><p class="mt-2 leading-6 text-slate-400">Git Bash ofrece una terminal para ejecutar comandos. Visual Studio Code permite editar archivos e integrar las operaciones de Git.</p></article>
+      </div>
+      <div class="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60 p-5 sm:p-7">
+        <h3 class="font-bold">Mapa rápido del flujo colaborativo</h3>
+        <div class="mt-5 grid grid-cols-2 gap-3 text-center text-sm sm:grid-cols-5">
+          <div class="rounded-xl border border-orange-400/30 bg-orange-400/10 p-4"><div class="text-2xl">💻</div><b class="mt-2 block">Equipo local</b><span class="text-xs text-slate-400">Editar y probar</span></div>
+          <div class="hidden items-center justify-center text-2xl text-slate-500 sm:flex">→</div>
+          <div class="rounded-xl border border-cyan-400/30 bg-cyan-400/10 p-4"><div class="text-2xl">⑂</div><b class="mt-2 block">Rama</b><span class="text-xs text-slate-400">Cambios aislados</span></div>
+          <div class="hidden items-center justify-center text-2xl text-slate-500 sm:flex">→</div>
+          <div class="rounded-xl border border-violet-400/30 bg-violet-400/10 p-4"><div class="text-2xl">🔎</div><b class="mt-2 block">Pull Request</b><span class="text-xs text-slate-400">Revisar e integrar</span></div>
+        </div>
+        <p class="mt-4 text-sm text-slate-400">Después de la revisión, el equipo integra los cambios en <code class="text-orange-300">develop</code> y, cuando la versión está validada, prepara su integración en <code class="text-orange-300">main</code>.</p>
+      </div>
+    </section>
+
+    <section id="ruta" class="border-y border-white/10 bg-slate-950/50">
+      <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="max-w-3xl"><p class="section-kicker text-xs font-bold uppercase text-violet-300">02 · Ruta guiada</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Del repositorio vacío al trabajo en equipo</h2><p class="mt-4 leading-7 text-slate-400">Sigue los pasos en orden. Los comandos se pueden copiar y adaptar a tu proyecto.</p></div>
+        <div class="mt-10 grid gap-5 lg:grid-cols-2">
+          <article class="rounded-2xl border border-white/10 bg-panel p-6"><div class="flex gap-4"><span class="step-number grid h-10 w-10 shrink-0 place-items-center rounded-full bg-orange-500 font-extrabold text-slate-950">1</span><div><h3 class="text-xl font-bold">Instala y configura Git</h3><p class="mt-2 text-sm leading-6 text-slate-400">Instala Git, abre Git Bash o la terminal de VS Code y configura la identidad que aparecerá en tus commits.</p></div></div>
+            <div class="code-block mt-4 rounded-xl border border-white/10 bg-slate-950 p-4"><button class="copy-btn rounded-md border border-white/15 px-2 py-1 text-xs text-slate-300 hover:bg-white/10" data-copy>Copiar</button><pre class="pr-16 font-mono text-xs leading-6 text-green-200"><code>git --version
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu_correo@ejemplo.com"
+git config --list</code></pre></div>
+          </article>
+          <article class="rounded-2xl border border-white/10 bg-panel p-6"><div class="flex gap-4"><span class="step-number grid h-10 w-10 shrink-0 place-items-center rounded-full bg-orange-500 font-extrabold text-slate-950">2</span><div><h3 class="text-xl font-bold">Crea el repositorio remoto</h3><p class="mt-2 text-sm leading-6 text-slate-400">En GitHub, selecciona <b>New repository</b>, define nombre, descripción y visibilidad. Copia la URL HTTPS o SSH.</p></div></div>
+            <ul class="mt-4 space-y-2 text-sm text-slate-300"><li>• <b>Público:</b> otras personas pueden ver el código.</li><li>• <b>Privado:</b> solo usuarios autorizados pueden acceder.</li><li>• Para este ejemplo, crea el repositorio sin README si vas a subir un proyecto local existente.</li></ul>
+          </article>
+          <article class="rounded-2xl border border-white/10 bg-panel p-6"><div class="flex gap-4"><span class="step-number grid h-10 w-10 shrink-0 place-items-center rounded-full bg-orange-500 font-extrabold text-slate-950">3</span><div><h3 class="text-xl font-bold">Inicializa y sube el proyecto</h3><p class="mt-2 text-sm leading-6 text-slate-400">Ejemplo para una carpeta local nueva y un repositorio remoto vacío. Reemplaza la URL por la de tu repositorio.</p></div></div>
+            <div class="code-block mt-4 rounded-xl border border-white/10 bg-slate-950 p-4"><button class="copy-btn rounded-md border border-white/15 px-2 py-1 text-xs text-slate-300 hover:bg-white/10" data-copy>Copiar</button><pre class="pr-16 font-mono text-xs leading-6 text-green-200"><code>mkdir mi-proyecto
+cd mi-proyecto
+git init
+git add .
+git commit -m "Primer commit"
+git branch -M main
+git remote add origin URL_DEL_REPOSITORIO
+git push -u origin main</code></pre></div>
+            <p class="mt-3 text-xs leading-5 text-amber-200">Nota: si la carpeta está vacía, crea primero un archivo, por ejemplo README.md. Si el repositorio remoto ya tiene commits, sincroniza el historial antes de intentar subirlo.</p>
+          </article>
+          <article class="rounded-2xl border border-white/10 bg-panel p-6"><div class="flex gap-4"><span class="step-number grid h-10 w-10 shrink-0 place-items-center rounded-full bg-orange-500 font-extrabold text-slate-950">4</span><div><h3 class="text-xl font-bold">Clona el proyecto</h3><p class="mt-2 text-sm leading-6 text-slate-400">Los colaboradores descargan una copia del repositorio para trabajar localmente.</p></div></div>
+            <div class="code-block mt-4 rounded-xl border border-white/10 bg-slate-950 p-4"><button class="copy-btn rounded-md border border-white/15 px-2 py-1 text-xs text-slate-300 hover:bg-white/10" data-copy>Copiar</button><pre class="pr-16 font-mono text-xs leading-6 text-green-200"><code>git clone URL_DEL_REPOSITORIO
+cd nombre-del-proyecto
+git status</code></pre></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="comandos" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="max-w-3xl"><p class="section-kicker text-xs font-bold uppercase text-cyan-300">03 · Caja de herramientas</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Comandos que usarás a diario</h2><p class="mt-4 leading-7 text-slate-400">Consulta la descripción y copia los comandos según la tarea. Ejecuta los comandos desde la carpeta correcta del proyecto.</p></div>
+      <div class="mt-8 overflow-hidden rounded-2xl border border-white/10">
+        <div class="flex flex-wrap gap-2 border-b border-white/10 bg-panel p-3" role="tablist" aria-label="Categorías de comandos">
+          <button class="command-tab rounded-lg bg-orange-500 px-4 py-2 text-sm font-bold text-slate-950" data-panel="basicos" role="tab" aria-selected="true">Básicos</button>
+          <button class="command-tab rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-white/5" data-panel="ramas-cmd" role="tab" aria-selected="false">Ramas</button>
+          <button class="command-tab rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-white/5" data-panel="sync" role="tab" aria-selected="false">Sincronización</button>
+          <button class="command-tab rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-white/5" data-panel="historial" role="tab" aria-selected="false">Historial</button>
+        </div>
+        <div id="basicos" class="command-panel grid gap-4 bg-slate-950/60 p-5 md:grid-cols-2">
+          <div><h3 class="font-bold">Revisar estado</h3><p class="mt-1 text-sm text-slate-400">Muestra archivos modificados, preparados o sin seguimiento.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git status</code></pre></div></div>
+          <div><h3 class="font-bold">Preparar cambios</h3><p class="mt-1 text-sm text-slate-400">Agrega todos los cambios actuales al área de preparación.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git add .</code></pre></div></div>
+          <div><h3 class="font-bold">Crear un commit</h3><p class="mt-1 text-sm text-slate-400">Guarda una instantánea con un mensaje descriptivo.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git commit -m "Describe el cambio"</code></pre></div></div>
+          <div><h3 class="font-bold">Conectar remoto</h3><p class="mt-1 text-sm text-slate-400">Asocia el repositorio local con el remoto llamado origin.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git remote add origin URL_DEL_REPOSITORIO</code></pre></div></div>
+        </div>
+        <div id="ramas-cmd" class="command-panel hidden grid gap-4 bg-slate-950/60 p-5 md:grid-cols-2">
+          <div><h3 class="font-bold">Crear y cambiar</h3><p class="mt-1 text-sm text-slate-400">Crea una rama y te cambia a ella.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git switch -c feature/login</code></pre></div></div>
+          <div><h3 class="font-bold">Listar ramas</h3><p class="mt-1 text-sm text-slate-400">Muestra las ramas locales.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git branch</code></pre></div></div>
+          <div><h3 class="font-bold">Cambiar de rama</h3><p class="mt-1 text-sm text-slate-400">Cambia a una rama que ya existe.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git switch develop</code></pre></div></div>
+          <div><h3 class="font-bold">Fusionar cambios</h3><p class="mt-1 text-sm text-slate-400">Integra la rama indicada en la rama actual.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git merge feature/login</code></pre></div></div>
+        </div>
+        <div id="sync" class="command-panel hidden grid gap-4 bg-slate-950/60 p-5 md:grid-cols-2">
+          <div><h3 class="font-bold">Descargar e integrar</h3><p class="mt-1 text-sm text-slate-400">Trae cambios remotos e intenta integrarlos en la rama actual.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git pull origin develop</code></pre></div></div>
+          <div><h3 class="font-bold">Publicar rama</h3><p class="mt-1 text-sm text-slate-400">Sube la rama y configura el seguimiento remoto.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git push -u origin feature/login</code></pre></div></div>
+          <div><h3 class="font-bold">Consultar remotos</h3><p class="mt-1 text-sm text-slate-400">Muestra las URL de los remotos configurados.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git remote -v</code></pre></div></div>
+          <div><h3 class="font-bold">Traer referencias</h3><p class="mt-1 text-sm text-slate-400">Actualiza referencias remotas sin integrar los cambios automáticamente.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git fetch origin</code></pre></div></div>
+        </div>
+        <div id="historial" class="command-panel hidden grid gap-4 bg-slate-950/60 p-5 md:grid-cols-2">
+          <div><h3 class="font-bold">Historial compacto</h3><p class="mt-1 text-sm text-slate-400">Muestra commits resumidos en una línea.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git log --oneline</code></pre></div></div>
+          <div><h3 class="font-bold">Ver diferencias</h3><p class="mt-1 text-sm text-slate-400">Muestra cambios que aún no están preparados.</p><div class="code-block mt-3 rounded-lg bg-black/50 p-3"><button class="copy-btn text-xs text-cyan-300" data-copy>Copiar</button><pre class="pr-12 font-mono text-sm text-green-200"><code>git diff</code></pre></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ramas" class="border-y border-white/10 bg-slate-950/50">
+      <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="max-w-3xl"><p class="section-kicker text-xs font-bold uppercase text-violet-300">04 · Flujo de ramas</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Organiza el trabajo con main, develop y feature</h2><p class="mt-4 leading-7 text-slate-400">Este flujo mantiene separadas las versiones estables de la integración y del trabajo individual. Es una estrategia recomendada, no una obligación para todos los proyectos.</p></div>
+        <div class="mt-8 grid gap-4 md:grid-cols-3">
+          <div class="rounded-2xl border border-orange-400/30 bg-orange-400/5 p-5"><div class="flex items-center gap-3"><span class="h-3 w-3 rounded-full bg-orange-400"></span><h3 class="text-lg font-bold text-orange-300">main</h3></div><p class="mt-3 text-sm leading-6 text-slate-400">Rama estable. Contiene versiones validadas y listas para entregar o publicar.</p></div>
+          <div class="rounded-2xl border border-violet-400/30 bg-violet-400/5 p-5"><div class="flex items-center gap-3"><span class="h-3 w-3 rounded-full bg-violet-400"></span><h3 class="text-lg font-bold text-violet-300">develop</h3></div><p class="mt-3 text-sm leading-6 text-slate-400">Rama de integración donde se reúnen funcionalidades antes de preparar una versión estable.</p></div>
+          <div class="rounded-2xl border border-cyan-400/30 bg-cyan-400/5 p-5"><div class="flex items-center gap-3"><span class="h-3 w-3 rounded-full bg-cyan-400"></span><h3 class="text-lg font-bold text-cyan-300">feature/*</h3></div><p class="mt-3 text-sm leading-6 text-slate-400">Ramas temporales para desarrollar una funcionalidad sin trabajar directamente en main.</p></div>
+        </div>
+        <div class="mt-6 grid gap-5 lg:grid-cols-2">
+          <div class="rounded-2xl border border-white/10 bg-panel p-6"><h3 class="text-lg font-bold">A. Crear y publicar develop</h3><p class="mt-2 text-sm text-slate-400">Ejecuta estos comandos después de clonar el repositorio y verificar que main está sincronizada.</p><div class="code-block mt-4 rounded-xl border border-white/10 bg-slate-950 p-4"><button class="copy-btn rounded-md border border-white/15 px-2 py-1 text-xs text-slate-300" data-copy>Copiar</button><pre class="pr-16 font-mono text-xs leading-6 text-green-200"><code>git switch main
+git pull origin main
+git switch -c develop
+git push -u origin develop</code></pre></div></div>
+          <div class="rounded-2xl border border-white/10 bg-panel p-6"><h3 class="text-lg font-bold">B. Crear una funcionalidad</h3><p class="mt-2 text-sm text-slate-400">Cada colaborador crea su rama desde develop, trabaja, registra sus cambios y la publica.</p><div class="code-block mt-4 rounded-xl border border-white/10 bg-slate-950 p-4"><button class="copy-btn rounded-md border border-white/15 px-2 py-1 text-xs text-slate-300" data-copy>Copiar</button><pre class="pr-16 font-mono text-xs leading-6 text-green-200"><code>git switch develop
+git pull origin develop
+git switch -c feature/nueva-funcionalidad
+git add .
+git commit -m "Agrega funcionalidad"
+git push -u origin feature/nueva-funcionalidad</code></pre></div></div>
+        </div>
+        <div class="mt-6 rounded-2xl border border-white/10 bg-panel p-6">
+          <h3 class="font-bold">Ejemplo de equipo</h3>
+          <div class="mt-4 grid gap-3 sm:grid-cols-3">
+            <div class="rounded-xl bg-slate-950 p-4"><span class="text-cyan-300">Colaborador 1</span><p class="mt-1 font-mono text-sm">feature/registro</p><p class="mt-2 text-xs text-slate-500">Formulario de registro</p></div>
+            <div class="rounded-xl bg-slate-950 p-4"><span class="text-violet-300">Colaborador 2</span><p class="mt-1 font-mono text-sm">feature/estilos</p><p class="mt-2 text-xs text-slate-500">Diseño responsive</p></div>
+            <div class="rounded-xl bg-slate-950 p-4"><span class="text-green-300">Colaborador 3</span><p class="mt-1 font-mono text-sm">feature/reportes</p><p class="mt-2 text-xs text-slate-500">Módulo de reportes</p></div>
+          </div>
+          <p class="mt-4 text-sm leading-6 text-slate-400">Cada persona abre un pull request hacia <code class="text-violet-300">develop</code>. El líder revisa y aprueba. Cuando el equipo valida el conjunto de cambios, se crea un pull request de <code class="text-orange-300">develop</code> hacia <code class="text-orange-300">main</code>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="colaboracion" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="max-w-3xl"><p class="section-kicker text-xs font-bold uppercase text-orange-400">05 · Trabajo en equipo</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Comparte el repositorio con colaboradores</h2><p class="mt-4 leading-7 text-slate-400">El líder del proyecto puede conceder acceso directo al repositorio. En repositorios de una organización, las opciones pueden variar según los permisos configurados.</p></div>
+      <ol class="mt-8 space-y-4">
+        <li class="flex gap-4 rounded-xl border border-white/10 bg-panel p-5"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-orange-400/15 font-bold text-orange-300">1</span><div><h3 class="font-bold">Abre la configuración</h3><p class="mt-1 text-sm leading-6 text-slate-400">En el repositorio, entra en Settings y busca Collaborators o la sección de acceso correspondiente.</p></div></li>
+        <li class="flex gap-4 rounded-xl border border-white/10 bg-panel p-5"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-orange-400/15 font-bold text-orange-300">2</span><div><h3 class="font-bold">Invita al equipo</h3><p class="mt-1 text-sm leading-6 text-slate-400">Busca el usuario de GitHub, envía la invitación y confirma que cada persona la acepte.</p></div></li>
+        <li class="flex gap-4 rounded-xl border border-white/10 bg-panel p-5"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-orange-400/15 font-bold text-orange-300">3</span><div><h3 class="font-bold">Define las responsabilidades</h3><p class="mt-1 text-sm leading-6 text-slate-400">Asigna funcionalidades e Issues. Acuerden nombres de ramas, mensajes de commit, revisores y reglas de integración.</p></div></li>
+        <li class="flex gap-4 rounded-xl border border-white/10 bg-panel p-5"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-orange-400/15 font-bold text-orange-300">4</span><div><h3 class="font-bold">Sincroniza antes de trabajar</h3><p class="mt-1 text-sm leading-6 text-slate-400">Actualiza la rama base antes de crear una rama nueva. Evita trabajar directamente sobre main si el equipo utiliza revisión por pull request.</p></div></li>
+      </ol>
+      <div class="mt-6 rounded-2xl border border-cyan-400/20 bg-cyan-400/5 p-5"><h3 class="font-bold text-cyan-200">¿Colaborador directo o contribuyente externo?</h3><p class="mt-2 text-sm leading-6 text-slate-300">Un colaborador directo recibe permisos en el repositorio original. Un contribuyente externo puede trabajar desde un fork y proponer cambios mediante un pull request, sin recibir acceso de escritura al repositorio original.</p></div>
+    </section>
+
+    <section id="pullrequests" class="border-y border-white/10 bg-slate-950/50">
+      <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="max-w-3xl"><p class="section-kicker text-xs font-bold uppercase text-violet-300">06 · Revisión de código</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Pull Requests: revisar antes de integrar</h2><p class="mt-4 leading-7 text-slate-400">Un pull request propone integrar los cambios de una rama en otra. Permite conversar, revisar diferencias, ejecutar comprobaciones y resolver observaciones antes de fusionar.</p></div>
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-2xl border border-white/10 bg-panel p-5"><div class="text-2xl text-violet-300">⑂</div><h3 class="mt-3 font-bold">1. Publica la rama</h3><p class="mt-2 text-sm text-slate-400">Usa git push para subir tus commits a GitHub.</p></div>
+          <div class="rounded-2xl border border-white/10 bg-panel p-5"><div class="text-2xl text-cyan-300">⌕</div><h3 class="mt-3 font-bold">2. Compara ramas</h3><p class="mt-2 text-sm text-slate-400">Selecciona la rama de origen y el destino: por ejemplo, feature → develop.</p></div>
+          <div class="rounded-2xl border border-white/10 bg-panel p-5"><div class="text-2xl text-green-300">✓</div><h3 class="mt-3 font-bold">3. Revisa y ajusta</h3><p class="mt-2 text-sm text-slate-400">El equipo comenta, solicita cambios y comprueba que el código funcione.</p></div>
+          <div class="rounded-2xl border border-white/10 bg-panel p-5"><div class="text-2xl text-orange-300">⇄</div><h3 class="mt-3 font-bold">4. Integra cambios</h3><p class="mt-2 text-sm text-slate-400">Una persona autorizada fusiona el pull request cuando cumple las reglas del proyecto.</p></div>
+        </div>
+        <div class="mt-6 rounded-2xl border border-white/10 bg-panel p-6"><h3 class="font-bold">Buenas prácticas de pull request</h3><ul class="mt-3 grid gap-2 text-sm leading-6 text-slate-300 sm:grid-cols-2"><li>✓ Usa un título concreto y una descripción clara.</li><li>✓ Mantén los cambios enfocados en una tarea.</li><li>✓ Vincula el Issue relacionado cuando exista.</li><li>✓ Resuelve conflictos y revisa los archivos modificados.</li><li>✓ Solicita revisión antes de integrar.</li><li>✓ Elimina la rama temporal si ya no se necesita.</li></ul><p class="mt-4 text-xs leading-5 text-slate-500">GitHub ofrece opciones como Create a merge commit, Squash and merge y Rebase and merge. El equipo debe acordar la estrategia según su flujo de trabajo.</p></div>
+      </div>
+    </section>
+
+    <section id="issues" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
+        <div><p class="section-kicker text-xs font-bold uppercase text-cyan-300">07 · Organización</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Gestiona tareas con Issues</h2><p class="mt-4 leading-7 text-slate-400">Los Issues permiten registrar errores, proponer funcionalidades, asignar responsables y documentar el avance. Con etiquetas e hitos, el equipo puede priorizar el trabajo.</p><div class="mt-6 rounded-xl border border-white/10 bg-panel p-5"><h3 class="font-bold">¿Qué debe incluir un Issue?</h3><ul class="mt-3 space-y-2 text-sm text-slate-300"><li>• Título concreto</li><li>• Contexto y descripción</li><li>• Pasos para reproducir un error, si aplica</li><li>• Resultado esperado y resultado obtenido</li><li>• Responsable, etiquetas y fecha o hito si corresponde</li></ul></div></div>
+        <div class="overflow-hidden rounded-2xl border border-white/10 bg-panel shadow-glow">
+          <div class="flex items-center justify-between border-b border-white/10 p-4"><div><span class="text-xs text-slate-500">ISSUES DEL PROYECTO</span><h3 class="mt-1 font-bold">Tablero de tareas</h3></div><span class="rounded-full bg-green-400/10 px-3 py-1 text-xs text-green-300">Demo visual</span></div>
+          <div class="space-y-3 p-4">
+            <div class="flex items-start gap-3 rounded-xl border border-white/10 bg-slate-950/60 p-4"><span class="mt-1 h-3 w-3 rounded-full bg-violet-400"></span><div class="min-w-0 flex-1"><div class="font-semibold">Crear formulario de registro</div><p class="mt-1 text-xs text-slate-500">#12 · Asignado a colaborador 1</p><div class="mt-2 flex flex-wrap gap-2"><span class="rounded-md bg-violet-400/10 px-2 py-1 text-xs text-violet-300">feature</span><span class="rounded-md bg-slate-700 px-2 py-1 text-xs">prioridad media</span></div></div><span class="text-xs text-slate-500">Abierto</span></div>
+            <div class="flex items-start gap-3 rounded-xl border border-white/10 bg-slate-950/60 p-4"><span class="mt-1 h-3 w-3 rounded-full bg-orange-400"></span><div class="min-w-0 flex-1"><div class="font-semibold">Corregir menú en móviles</div><p class="mt-1 text-xs text-slate-500">#13 · Asignado a colaborador 2</p><div class="mt-2 flex flex-wrap gap-2"><span class="rounded-md bg-orange-400/10 px-2 py-1 text-xs text-orange-300">bug</span><span class="rounded-md bg-slate-700 px-2 py-1 text-xs">responsive</span></div></div><span class="text-xs text-slate-500">En curso</span></div>
+            <div class="flex items-start gap-3 rounded-xl border border-white/10 bg-slate-950/60 p-4"><span class="mt-1 h-3 w-3 rounded-full bg-green-400"></span><div class="min-w-0 flex-1"><div class="font-semibold">Documentar instalación</div><p class="mt-1 text-xs text-slate-500">#14 · Asignado a colaborador 3</p><div class="mt-2 flex flex-wrap gap-2"><span class="rounded-md bg-green-400/10 px-2 py-1 text-xs text-green-300">documentación</span></div></div><span class="text-xs text-green-300">Cerrado</span></div>
+          </div>
+          <p class="border-t border-white/10 px-4 py-3 text-xs text-slate-500">Ejemplo ilustrativo; crea los Issues reales desde la pestaña Issues de tu repositorio.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="publicacion" class="border-y border-white/10 bg-slate-950/50">
+      <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="max-w-3xl"><p class="section-kicker text-xs font-bold uppercase text-orange-400">08 · Publicación</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Publica tu landing con GitHub Pages</h2><p class="mt-4 leading-7 text-slate-400">GitHub Pages permite servir sitios estáticos desde un repositorio. Es adecuado para HTML, CSS y JavaScript del lado del cliente.</p></div>
+        <div class="mt-8 grid gap-6 lg:grid-cols-2">
+          <div class="rounded-2xl border border-white/10 bg-panel p-6"><h3 class="text-lg font-bold">Pasos para publicar</h3><ol class="mt-4 space-y-3 text-sm leading-6 text-slate-300"><li><b class="text-orange-300">01.</b> Sube el archivo <code>index.html</code> y los recursos al repositorio.</li><li><b class="text-orange-300">02.</b> Abre Settings → Pages.</li><li><b class="text-orange-300">03.</b> En Build and deployment, selecciona la fuente disponible, normalmente Deploy from a branch.</li><li><b class="text-orange-300">04.</b> Selecciona la rama y carpeta de publicación, por ejemplo <code>main</code> y <code>/(root)</code>.</li><li><b class="text-orange-300">05.</b> Guarda y espera a que finalice el despliegue; visita la URL mostrada en Pages.</li></ol></div>
+          <div class="rounded-2xl border border-orange-400/20 bg-orange-400/5 p-6"><div class="text-3xl">🚀</div><h3 class="mt-3 text-lg font-bold">Importante: frontend vs. backend</h3><p class="mt-3 text-sm leading-6 text-slate-300">GitHub Pages publica contenido estático; no ejecuta un servidor FastAPI, Node.js ni una base de datos. Si tu proyecto necesita un backend, debes desplegarlo en un servicio compatible y configurar la URL de la API en el frontend.</p><p class="mt-4 text-sm leading-6 text-slate-400">Después de actualizar el sitio, registra los cambios con Git y súbelos a la rama configurada para que se publique una nueva versión.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="errores" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="max-w-3xl"><p class="section-kicker text-xs font-bold uppercase text-violet-300">09 · Solución de problemas</p><h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Errores frecuentes y cómo abordarlos</h2><p class="mt-4 leading-7 text-slate-400">Abre cada pregunta para consultar una orientación inicial. Antes de ejecutar comandos que sobrescriban archivos o historial, revisa el estado y conserva una copia de los cambios importantes.</p></div>
+      <div class="mt-8 space-y-3">
+        <div class="faq-item rounded-xl border border-white/10 bg-panel"><button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left font-semibold" aria-expanded="false"><span>¿Qué hago si aparece “remote origin already exists”?</span><span class="faq-icon text-orange-300">＋</span></button><div class="faq-content px-5 pb-5 text-sm leading-6 text-slate-400" hidden>Comprueba el remoto con <code class="text-green-300">git remote -v</code>. Si la URL es correcta, no necesitas volver a agregarlo. Si es incorrecta, puedes actualizarla con <code class="text-green-300">git remote set-url origin URL_DEL_REPOSITORIO</code>.</div></div>
+        <div class="faq-item rounded-xl border border-white/10 bg-panel"><button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left font-semibold" aria-expanded="false"><span>¿Por qué falla git push?</span><span class="faq-icon text-orange-300">＋</span></button><div class="faq-content px-5 pb-5 text-sm leading-6 text-slate-400" hidden>Revisa la conexión, la autenticación, la URL remota, la rama actual y los permisos. Si el remoto tiene commits que no existen localmente, primero trae e integra los cambios de forma segura. GitHub no acepta la contraseña normal de la cuenta para autenticación Git por HTTPS; usa un método admitido, como Git Credential Manager o SSH.</div></div>
+        <div class="faq-item rounded-xl border border-white/10 bg-panel"><button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left font-semibold" aria-expanded="false"><span>¿Cómo resuelvo un conflicto de merge?</span><span class="faq-icon text-orange-300">＋</span></button><div class="faq-content px-5 pb-5 text-sm leading-6 text-slate-400" hidden>Ejecuta <code class="text-green-300">git status</code>, abre los archivos en conflicto, decide qué contenido conservar y elimina los marcadores de conflicto. Después ejecuta <code class="text-green-300">git add ARCHIVO</code> y completa la operación con el commit o la acción que Git solicite. Si no sabes cómo continuar, consulta el estado antes de abortar la operación.</div></div>
+        <div class="faq-item rounded-xl border border-white/10 bg-panel"><button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left font-semibold" aria-expanded="false"><span>¿Cuál es la diferencia entre fetch, pull y push?</span><span class="faq-icon text-orange-300">＋</span></button><div class="faq-content px-5 pb-5 text-sm leading-6 text-slate-400" hidden><code class="text-green-300">git fetch</code> actualiza referencias remotas sin integrar los cambios; <code class="text-green-300">git pull</code> obtiene cambios e intenta integrarlos en la rama actual; <code class="text-green-300">git push</code> publica commits locales en el repositorio remoto.</div></div>
+        <div class="faq-item rounded-xl border border-white/10 bg-panel"><button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left font-semibold" aria-expanded="false"><span>¿Cómo protejo mis credenciales y archivos privados?</span><span class="faq-icon text-orange-300">＋</span></button><div class="faq-content px-5 pb-5 text-sm leading-6 text-slate-400" hidden>No subas contraseñas, tokens, claves privadas ni archivos con datos sensibles. Usa variables de entorno locales, añade los archivos correspondientes a <code class="text-green-300">.gitignore</code> antes de registrarlos y rota cualquier secreto que se haya expuesto. Añadirlo a .gitignore no elimina un secreto que ya está en el historial.</div></div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <div class="overflow-hidden rounded-3xl border border-violet-400/20 bg-gradient-to-br from-violet-500/15 via-slate-900 to-orange-500/10 p-7 sm:p-10">
+        <div class="grid items-center gap-8 lg:grid-cols-[1fr_auto]"><div><p class="section-kicker text-xs font-bold uppercase text-violet-300">Tu siguiente paso</p><h2 class="mt-3 text-3xl font-extrabold">Aprende haciendo: construye en equipo.</h2><p class="mt-3 max-w-2xl leading-7 text-slate-300">Crea un repositorio de práctica, invita a dos o tres colaboradores, asigna un Issue a cada persona y completa el flujo feature → develop → main mediante pull requests.</p></div><a href="#ruta" class="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 font-bold text-slate-950 transition hover:bg-orange-200">Volver al inicio de la guía ↑</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/10 bg-slate-950">
+    <div class="mx-auto grid max-w-7xl gap-6 px-4 py-8 text-sm sm:px-6 md:grid-cols-2 lg:px-8">
+      <div><div class="font-extrabold">Git <span class="text-orange-400">y</span> GitHub</div><p class="mt-2 max-w-md text-slate-500">Material educativo para aprender control de versiones, colaboración y publicación de proyectos.</p></div>
+      <div class="md:text-right"><p class="font-semibold text-slate-300">Documentación oficial</p><div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 md:justify-end"><a class="text-slate-400 hover:text-orange-300" href="https://git-scm.com/doc" target="_blank" rel="noreferrer">Git</a><a class="text-slate-400 hover:text-orange-300" href="https://docs.github.com/" target="_blank" rel="noreferrer">GitHub Docs</a><a class="text-slate-400 hover:text-orange-300" href="https://docs.github.com/en/pages" target="_blank" rel="noreferrer">GitHub Pages</a></div></div>
+    </div>   
+    <div class="border-t border-white/5 px-16 py-6 text-center text-xs text-slate-400">© 2026 · Guia desarrollada por Jhan Hader Muñoz - Instructor SENA - <a class="text-slate-400 hover:text-orange-300" href="https://github.com" target="_blank" rel="noreferrer">GitHub, Inc.</a></div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
